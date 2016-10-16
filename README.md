@@ -1,32 +1,52 @@
-# ssllabs.py
-Python module for the Qualys SSL Labs Server Test
+# REST Client for the Qualys SSL Labs Server Test
 
-Dependencies:
+## Dependencies
+Requests: http://docs.python-requests.org/en/lates/
 
-Requires the third-party Python Requests library - http://docs.python-requests.org/en/latest/
+## Usage
 
-Developed with support of Python 2/3.
+Initialize an instance of the REST Client
 
-Use:
+```
+In[2]: from ssllabs.clients import RESTClient
+In[3]: hostname = "www.ssllabs.com"
+In[4]: client = RESTClient(host=hostname)
+```
 
-Download module and navigate inside ssllabs folder.
+Now, you can call the API endpoints:
 
-Then:
+### info
 
-import ssllabsscanner
+```
+In[5]: response = client.info()
+In[6]: response
+Out[6]: 
 
-For results from cache:
+{u'clientMaxAssessments': 25,
+ u'criteriaVersion': u'2009l',
+ u'currentAssessments': 0,
+ u'engineVersion': u'1.24.0',
+ u'maxAssessments': 25,
+ u'messages': [u'This assessment service is provided free of charge by Qualys SSL Labs, subject to our terms and conditions: https://www.ssllabs.com/about/terms.html'],
+ u'newAssessmentCoolOff': 1000}
+```
 
-data = ssllabsscanner.resultsFromCache("www.qualys.com")
+### getEndpointData
 
-data now contains a JSON object that can be parsed for your needs.
+```
+In[7]: response = client.get_endpoint_data(s='173.203.82.166')
+In[8]: response
+Out[8]: 
+{u'errors': [{u'message': u'Endpoint not found'}]}
+```
 
-Parse the object to determine your grade:
+### analyze
 
-print(data['endpoints'][0]['grade'])
+```
+response = client.analyze()
+```
 
-For retrieving the data from a new scan:
-
-data = ssllabsscanner.newScan("www.qualys.com")
-
-data now contains a JSON object that can be parsed for your needs.
+By default, analyze will start a new assessment, you may choose to get cached results
+```
+response = client.analyze(from_cache='on')
+```
