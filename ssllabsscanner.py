@@ -19,7 +19,7 @@ def requestAPI(path, payload={}):
 
     try:
         response = requests.get(url, params=payload)
-    except requests.exception.RequestException:
+    except requests.exceptions.RequestException:
         logging.exception('Request failed.')
         sys.exit(1)
 
